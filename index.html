@@ -336,13 +336,8 @@
         <h3>Save or move your data</h3>
         <div class="admin-actions">
           <button class="button small" id="saveChanges" type="button">Save changes</button>
-          <button class="button small" id="exportData" type="button">Export JSON</button>
-          <button class="button small" id="exportNotepad" type="button">Export Notepad file</button>
           <button class="button small" id="exportMauticHtml" type="button">Export Mautic HTML</button>
           <button class="button small" id="copyMauticHtml" type="button">Copy Mautic HTML</button>
-          <label class="button small" for="importData">Import JSON</label>
-          <input id="importData" type="file" accept="application/json" hidden>
-          <button class="button small danger" id="resetData" type="button">Reset</button>
         </div>
         <div class="status" id="adminStatus"></div>
       </section>
@@ -691,9 +686,16 @@
 
       return `<!-- CxO Vacancies: paste this entire block into a Mautic custom HTML/code block. -->
 <style>
+.cxo-mautic-page{margin:0;background:#fff;font-family:Arial,sans-serif;color:#26313A}.cxo-hero{position:relative;min-height:610px;display:grid;align-items:center;overflow:hidden;color:#fff;background:radial-gradient(circle at 82% 20%,rgba(49,133,157,.55),transparent 34%),linear-gradient(122deg,#212D3E 0%,#323F54 55%,#285F70 100%)}.cxo-hero-inner{position:relative;z-index:2;width:min(1120px,calc(100% - 40px));margin:auto;padding:145px 0 105px}.cxo-main-logo{position:absolute;z-index:4;top:26px;left:max(20px,calc((100% - 1120px)/2));height:auto;object-fit:contain;transform-origin:left top}.cxo-hero-kicker{display:block;margin-bottom:20px;color:#CDECF3;font-size:13px;font-weight:800;letter-spacing:.12em}.cxo-hero h1{max-width:760px;margin:0 0 22px;font-size:clamp(48px,7vw,88px);line-height:.98;letter-spacing:-.045em}.cxo-hero p{max-width:680px;margin:0 0 32px;color:rgba(255,255,255,.84);font-size:clamp(17px,2vw,21px)}.cxo-hero-btn{display:inline-flex;min-height:50px;padding:0 23px;align-items:center;justify-content:center;border-radius:999px;color:#fff!important;background:#31859D;text-decoration:none;font-weight:800}.cxo-network{position:absolute;z-index:1;right:2%;top:12%;width:min(47vw,680px);opacity:.56;pointer-events:none}.cxo-network svg{display:block;width:100%;height:auto}.cxo-network-line{stroke:#8ED3E1;stroke-width:2;opacity:.48}.cxo-network-node{fill:rgba(255,255,255,.08);stroke:#9EDAE5;stroke-width:2}.cxo-network-person{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.cxo-network-core{fill:rgba(49,133,157,.36);stroke:#D4F2F7;stroke-width:2.5}.cxo-page-footer{padding:27px 20px;color:rgba(255,255,255,.72);background:#252A2E}.cxo-footer-inner{width:min(1120px,100%);margin:auto;display:flex;justify-content:space-between;align-items:center;gap:20px}.cxo-footer-logo{width:165px;height:auto}@media(max-width:720px){.cxo-hero{min-height:570px}.cxo-main-logo{left:20px}.cxo-network{right:-25%;top:18%;width:90vw;opacity:.24}.cxo-footer-inner{align-items:flex-start;flex-direction:column}}
 .cxo-vacancies-app{--cxo-slate:#323F54;--cxo-teal:#31859D;--cxo-mist:#F4F7F8;--cxo-line:#DCE4E7;--cxo-ink:#26313A;font-family:Arial,sans-serif;color:var(--cxo-ink);background:var(--cxo-mist);padding:70px 20px;line-height:1.6}.cxo-wrap{width:min(1120px,100%);margin:auto}.cxo-heading{margin-bottom:36px}.cxo-heading small{color:var(--cxo-teal);font-weight:800;letter-spacing:.08em}.cxo-heading h2{margin:4px 0 10px;color:var(--cxo-slate);font-size:clamp(32px,5vw,52px);line-height:1.05}.cxo-heading p{max-width:720px;color:#68747E}.cxo-jobs{display:grid;gap:16px}.cxo-job-card{overflow:hidden;border:1px solid var(--cxo-line);border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(40,57,70,.06)}.cxo-job-main{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding:26px 28px}.cxo-company-logo{width:76px;height:76px;padding:9px;border:1px solid var(--cxo-line);border-radius:14px;background:#fff;object-fit:contain}.cxo-placeholder{display:grid;place-items:center;color:var(--cxo-teal);background:#EAF3F5;font-weight:900;font-size:20px}.cxo-company{color:var(--cxo-teal);font-size:13px;font-weight:800;letter-spacing:.07em}.cxo-job-copy h3{margin:3px 0 10px;color:var(--cxo-slate);font-size:22px;line-height:1.25}.cxo-tags{display:flex;flex-wrap:wrap;gap:8px}.cxo-tags span{padding:5px 10px;border-radius:999px;color:#42616A;background:#EAF3F5;font-size:13px;font-weight:700}.cxo-actions{display:flex;flex-direction:column;gap:9px;min-width:175px}.cxo-actions a{display:flex;min-height:42px;padding:0 15px;align-items:center;justify-content:center;border-radius:999px;text-decoration:none;font-weight:800}.cxo-apply-btn{color:#fff!important;background:var(--cxo-teal)}.cxo-outline-btn{border:1px solid #B7CCD2;color:var(--cxo-teal)!important;background:#fff}.cxo-description{border-top:1px solid var(--cxo-line)}.cxo-description summary{position:relative;padding:15px 52px 15px 28px;color:var(--cxo-slate);background:#F8FAFB;cursor:pointer;font-weight:800;list-style:none}.cxo-description summary::-webkit-details-marker{display:none}.cxo-description summary:after{content:'+';position:absolute;right:20px;top:50%;display:grid;width:28px;height:28px;place-items:center;border-radius:50%;color:#fff;background:var(--cxo-teal);transform:translateY(-50%)}.cxo-description[open] summary:after{content:'−'}.cxo-description-body{padding:24px 28px;color:#465760}.cxo-description-body h2,.cxo-description-body h3,.cxo-description-body h4{color:var(--cxo-slate)}.cxo-form-section{margin-top:54px;padding:32px;border-radius:18px;color:#fff;background:#4B4F54}.cxo-form-section h2{margin-top:0}.cxo-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cxo-field-full{grid-column:1/-1}.cxo-form label{display:block;margin-bottom:6px;font-weight:800}.cxo-form input,.cxo-form select{width:100%;min-height:48px;padding:10px 12px;border:1px solid #CAD5D9;border-radius:9px;background:#fff;color:#26313A;box-sizing:border-box}.cxo-submit{grid-column:1/-1;width:max-content;min-height:48px;padding:0 22px;border:0;border-radius:999px;color:#fff;background:var(--cxo-teal);font-weight:800;cursor:pointer}@media(max-width:720px){.cxo-job-main{grid-template-columns:1fr;padding:22px}.cxo-actions{min-width:0}.cxo-form{grid-template-columns:1fr}.cxo-field-full,.cxo-submit{grid-column:auto}.cxo-company-logo{width:68px;height:68px}}
 </style>
-<section class="cxo-vacancies-app">
+<div class="cxo-mautic-page">
+<header class="cxo-hero">
+  ${state.mainLogo ? `<img class="cxo-main-logo" src="${state.mainLogo}" alt="CxO series logo" style="width:${Number(state.logoWidth)||220}px;transform:translate(${Number(state.logoX)||0}px,${Number(state.logoY)||0}px) scale(${(Number(state.logoScale)||100)/100})">` : ''}
+  <div class="cxo-network" aria-hidden="true"><svg viewBox="0 0 720 620" xmlns="http://www.w3.org/2000/svg"><path class="cxo-network-line" d="M358 308L164 150M358 308L548 125M358 308L615 340M358 308L500 515M358 308L205 505M164 150L548 125M548 125L615 340M615 340L500 515M500 515L205 505M205 505L164 150"/><g><circle class="cxo-network-core" cx="358" cy="308" r="54"/><circle class="cxo-network-node" cx="164" cy="150" r="48"/><circle class="cxo-network-node" cx="548" cy="125" r="48"/><circle class="cxo-network-node" cx="615" cy="340" r="48"/><circle class="cxo-network-node" cx="500" cy="515" r="48"/><circle class="cxo-network-node" cx="205" cy="505" r="48"/></g><g class="cxo-network-person"><g transform="translate(358 308)"><circle cy="-18" r="14"/><path d="M-28 32c3-22 14-34 28-34s25 12 28 34"/></g><g transform="translate(164 150)"><circle cy="-13" r="10"/><path d="M-20 25c2-17 10-26 20-26s18 9 20 26"/></g><g transform="translate(548 125)"><circle cy="-13" r="10"/><path d="M-20 25c2-17 10-26 20-26s18 9 20 26"/></g></g></svg></div>
+  <div class="cxo-hero-inner"><span class="cxo-hero-kicker">Careers at CxO</span><h1>Build what's next.</h1><p>Explore current technology and leadership opportunities from organisations in the CxO community.</p><a class="cxo-hero-btn" href="#cxo-vacancies">View vacancies</a></div>
+</header>
+<section class="cxo-vacancies-app" id="cxo-vacancies">
   <div class="cxo-wrap">
     <div class="cxo-heading"><small>Opportunities</small><h2>Current vacancies</h2><p>Select a vacancy to view the full job description or submit an application.</p></div>
     <div class="cxo-jobs">${vacancyCards || '<p>No vacancies are currently listed.</p>'}</div>
@@ -710,6 +712,8 @@
     </div>
   </div>
 </section>
+<footer class="cxo-page-footer"><div class="cxo-footer-inner">${state.mainLogo ? `<img class="cxo-footer-logo" src="${state.mainLogo}" alt="CxO series logo">` : '<strong>CxO series</strong>'}<span>© CxO. All rights reserved.</span></div></footer>
+</div>
 <script>
 document.addEventListener('click',function(event){var link=event.target.closest('[data-cxo-role]');if(link){var field=document.getElementById('cxo-role');if(field){field.value=link.getAttribute('data-cxo-role');}}});
 <\/script>`;
@@ -724,40 +728,6 @@ document.addEventListener('click',function(event){var link=event.target.closest(
       URL.revokeObjectURL(link.href);
     }
 
-    document.getElementById('exportData').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'cxo-vacancies-data.json';
-      link.click();
-      URL.revokeObjectURL(link.href);
-    });
-
-    document.getElementById('exportNotepad').addEventListener('click', () => {
-      const lines = [];
-      lines.push('CxO VACANCIES');
-      lines.push('==============');
-      lines.push('');
-      state.vacancies.forEach((job, index) => {
-        lines.push(`${index + 1}. ${job.company} - ${job.title}`);
-        lines.push(`Location: ${job.location || ''}`);
-        lines.push(`Type: ${job.type || ''}`);
-        if (job.descriptionUrl) lines.push(`External link: ${job.descriptionUrl}`);
-        lines.push('');
-        lines.push('JOB DESCRIPTION');
-        lines.push(job.description ? richHtmlToText(job.description) : 'No job description has been added.');
-        lines.push('');
-        lines.push('----------------------------------------');
-        lines.push('');
-      });
-      const blob = new Blob([lines.join('\r\n')], { type: 'text/plain;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'CxO_Vacancies_Plain_Text.txt';
-      link.click();
-      URL.revokeObjectURL(link.href);
-    });
-
     document.getElementById('exportMauticHtml').addEventListener('click', () => {
       downloadTextFile('CxO_Vacancies_Mautic_HTML.txt', buildMauticHtml());
       showStatus('Mautic HTML exported. Paste the full contents into a Mautic custom HTML/code block.');
@@ -771,29 +741,6 @@ document.addEventListener('click',function(event){var link=event.target.closest(
         downloadTextFile('CxO_Vacancies_Mautic_HTML.txt', buildMauticHtml());
         showStatus('Clipboard access was blocked, so the Mautic HTML file was downloaded instead.');
       }
-    });
-
-    document.getElementById('importData').addEventListener('change', async event => {
-      const file = event.target.files[0];
-      if (!file) return;
-      try {
-        const imported = JSON.parse(await file.text());
-        if (!Array.isArray(imported.vacancies)) throw new Error('Invalid data');
-        state = { ...structuredClone(defaultState), ...imported };
-        saveState();
-        renderPage();
-        renderEditor();
-        showStatus('Data imported successfully.');
-      } catch { showStatus('The selected JSON file is not valid.'); }
-    });
-
-    document.getElementById('resetData').addEventListener('click', () => {
-      if (!confirm('Reset the logo, positioning and all vacancies?')) return;
-      state = structuredClone(defaultState);
-      localStorage.removeItem(STORAGE_KEY);
-      renderPage();
-      renderEditor();
-      showStatus('Page reset to the original vacancy list.');
     });
 
     document.addEventListener('click', event => {
