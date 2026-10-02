@@ -189,18 +189,28 @@
     .vacancy-editor { display: grid; gap: 12px; }
     .vacancy-edit-card { position: relative; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #FBFCFC; }
     .vacancy-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .editor-accordion { grid-column: 1 / -1; overflow: hidden; border: 1px solid #C7D7DC; border-radius: 12px; background: #FFFFFF; }
-    .editor-accordion summary { position: relative; padding: 15px 46px 15px 16px; color: var(--slate); background: linear-gradient(90deg, #EAF3F5, #F8FBFC); cursor: pointer; font-weight: 900; list-style: none; }
-    .editor-accordion summary::-webkit-details-marker { display: none; }
-    .editor-accordion summary::after { content: '+'; position: absolute; top: 50%; right: 16px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; color: #FFFFFF; background: var(--teal); transform: translateY(-50%); font-size: 1.15rem; line-height: 1; }
-    .editor-accordion[open] summary::after { content: '−'; }
-    .editor-accordion[open] summary { border-bottom: 1px solid #D4E1E5; }
-    .editor-accordion-body { padding: 16px; }
-    .editor-accordion-body textarea { min-height: 320px; line-height: 1.65; }
-    .editor-accordion-hint { margin: 8px 0 0; color: #69767F; font-size: .82rem; }
-    .description-preview { margin-top: 12px; padding: 16px; border-left: 4px solid var(--teal); border-radius: 8px; color: #40545D; background: #F4F8F9; white-space: pre-wrap; line-height: 1.65; }
-    .description-preview:empty::before { content: 'The job description preview will appear here.'; color: #7A878E; }
-    .preview-label { margin: 14px 0 6px; color: var(--slate); font-size: .82rem; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; }
+    .description-editor-button { grid-column: 1 / -1; width: 100%; min-height: 50px; border: 1px solid #B7CCD2; border-radius: 12px; color: var(--slate); background: linear-gradient(90deg, #EAF3F5, #F8FBFC); cursor: pointer; font-weight: 900; text-align: left; padding: 0 17px; }
+    .description-editor-button::after { content: 'Open'; float: right; color: var(--teal); }
+    .rich-editor-overlay { position: fixed; z-index: 100; inset: 0; display: none; background: #F4F7F8; }
+    .rich-editor-overlay.open { display: flex; flex-direction: column; }
+    .rich-editor-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 16px 24px; color: #FFFFFF; background: linear-gradient(122deg, #212D3E 0%, var(--slate) 60%, #285F70 100%); box-shadow: 0 5px 24px rgba(25,40,52,.18); }
+    .rich-editor-header h2 { margin: 0; color: #FFFFFF; font-size: 1.25rem; }
+    .rich-editor-header p { margin: 2px 0 0; color: rgba(255,255,255,.72); font-size: .82rem; }
+    .rich-editor-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 24px; border-bottom: 1px solid #D5E0E4; background: #FFFFFF; }
+    .toolbar-group { display: flex; align-items: center; gap: 6px; padding-right: 10px; margin-right: 2px; border-right: 1px solid #DCE4E7; }
+    .toolbar-group:last-child { border-right: 0; }
+    .toolbar-button, .toolbar-select, .toolbar-color { min-height: 38px; border: 1px solid #C9D5D9; border-radius: 8px; color: var(--slate); background: #FFFFFF; cursor: pointer; }
+    .toolbar-button { min-width: 40px; padding: 0 11px; font-weight: 800; }
+    .toolbar-button:hover { border-color: var(--teal); background: #EEF6F8; }
+    .toolbar-select { width: auto; padding: 6px 10px; }
+    .toolbar-color { width: 44px; padding: 4px; }
+    .rich-editor-workspace { flex: 1; min-height: 0; overflow: auto; padding: 28px; }
+    .rich-editor-canvas { width: min(920px, 100%); min-height: calc(100vh - 220px); margin: 0 auto; padding: 42px 48px; border: 1px solid #D6E0E4; border-radius: 14px; outline: none; color: #26313A; background: #FFFFFF; box-shadow: 0 15px 45px rgba(33,48,61,.1); line-height: 1.65; }
+    .rich-editor-canvas:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(49,133,157,.13), 0 15px 45px rgba(33,48,61,.1); }
+    .rich-editor-canvas:empty::before { content: 'Type or paste the full job description here...'; color: #8B969C; }
+    .rich-editor-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 24px; border-top: 1px solid #D5E0E4; background: #FFFFFF; }
+    .editor-secondary { border: 1px solid #B7C8CD; color: var(--slate); background: #FFFFFF; }
+    @media (max-width: 700px) { .rich-editor-header { padding: 13px 15px; } .rich-editor-toolbar { padding: 10px 12px; } .rich-editor-workspace { padding: 12px; } .rich-editor-canvas { min-height: calc(100vh - 245px); padding: 24px 20px; border-radius: 10px; } .toolbar-group { padding-right: 5px; } }
     .remove-job { margin-top: 10px; border: 0; color: var(--danger); background: transparent; cursor: pointer; font-weight: 800; }
     .file-hint { margin: 6px 0 0; color: #6B7880; font-size: .8rem; }
     .status { display: none; margin-top: 12px; padding: 10px 12px; border-left: 4px solid var(--teal); background: #ECF5F7; }
@@ -337,6 +347,43 @@
     </aside>
   </div>
 
+  <div class="rich-editor-overlay" id="richEditorOverlay" aria-hidden="true">
+    <div class="rich-editor-header">
+      <div><h2>Job Description Editor</h2><p id="richEditorJobName">Edit and format the selected vacancy description</p></div>
+      <button class="close-admin" id="closeRichEditor" type="button" aria-label="Close job description editor">×</button>
+    </div>
+    <div class="rich-editor-toolbar" role="toolbar" aria-label="Text formatting tools">
+      <div class="toolbar-group">
+        <button class="toolbar-button" type="button" data-command="bold" title="Bold"><strong>B</strong></button>
+        <button class="toolbar-button" type="button" data-command="italic" title="Italic"><em>I</em></button>
+        <button class="toolbar-button" type="button" data-command="underline" title="Underline"><u>U</u></button>
+      </div>
+      <div class="toolbar-group">
+        <select class="toolbar-select" id="textSize" aria-label="Text size">
+          <option value="3">Normal</option><option value="2">Small</option><option value="4">Large</option><option value="5">Heading</option><option value="6">Large heading</option>
+        </select>
+        <label for="textColor" style="margin:0;font-size:.78rem">Text colour</label>
+        <input class="toolbar-color" id="textColor" type="color" value="#26313A" aria-label="Text colour">
+      </div>
+      <div class="toolbar-group">
+        <button class="toolbar-button" type="button" data-command="insertUnorderedList" title="Bullet list">• List</button>
+        <button class="toolbar-button" type="button" data-command="insertOrderedList" title="Numbered list">1. List</button>
+      </div>
+      <div class="toolbar-group">
+        <button class="toolbar-button" type="button" data-block="h3">Heading</button>
+        <button class="toolbar-button" type="button" data-block="p">Paragraph</button>
+        <button class="toolbar-button" type="button" data-command="removeFormat">Clear style</button>
+      </div>
+    </div>
+    <div class="rich-editor-workspace">
+      <div class="rich-editor-canvas" id="richEditorCanvas" contenteditable="true" spellcheck="true" aria-label="Full job description content"></div>
+    </div>
+    <div class="rich-editor-footer">
+      <button class="button small editor-secondary" id="cancelRichEditor" type="button">Cancel</button>
+      <button class="button small" id="saveRichEditor" type="button">Save job description</button>
+    </div>
+  </div>
+
   <script>
     const STORAGE_KEY = 'cxo-vacancies-webapp-v1';
 
@@ -376,6 +423,41 @@
       return String(value || '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
     }
 
+    function sanitizeRichHtml(html) {
+      const template = document.createElement('template');
+      template.innerHTML = String(html || '');
+      const allowed = new Set(['P','BR','STRONG','B','EM','I','U','UL','OL','LI','H2','H3','H4','SPAN','DIV']);
+      const clean = node => {
+        [...node.childNodes].forEach(child => {
+          if (child.nodeType === Node.ELEMENT_NODE) {
+            if (!allowed.has(child.tagName)) {
+              child.replaceWith(...child.childNodes);
+              return;
+            }
+            [...child.attributes].forEach(attr => {
+              if (attr.name !== 'style') child.removeAttribute(attr.name);
+            });
+            if (child.hasAttribute('style')) {
+              const color = child.style.color;
+              const fontSize = child.style.fontSize;
+              child.removeAttribute('style');
+              if (color) child.style.color = color;
+              if (fontSize) child.style.fontSize = fontSize;
+            }
+            clean(child);
+          }
+        });
+      };
+      clean(template.content);
+      return template.innerHTML;
+    }
+
+    function richHtmlToText(html) {
+      const div = document.createElement('div');
+      div.innerHTML = sanitizeRichHtml(html);
+      return div.innerText.trim();
+    }
+
     function initials(company) {
       return company.split(/\s+/).filter(Boolean).slice(0,2).map(word => word[0]).join('').toUpperCase() || 'JOB';
     }
@@ -410,7 +492,7 @@
           : `<div class="company-logo placeholder" aria-hidden="true">${escapeHtml(initials(job.company))}</div>`;
         const externalLink = job.descriptionUrl ? `<a class="job-link" href="${escapeHtml(job.descriptionUrl)}" target="_blank" rel="noopener">Open attachment</a>` : '';
         const description = job.description && job.description.trim()
-          ? escapeHtml(job.description)
+          ? sanitizeRichHtml(job.description)
           : 'The full job description will be added here.';
         article.innerHTML = `${logo}<div><div class="company">${escapeHtml(job.company)}</div><h3>${escapeHtml(job.title)}</h3><div class="meta"><span class="tag">${escapeHtml(job.location)}</span><span class="tag">${escapeHtml(job.type)}</span></div></div><div class="job-actions">${externalLink}<a class="apply-link" href="#apply" data-role="${escapeHtml(job.id)}">Apply now</a></div><div class="job-description"><details><summary>View job description</summary><div class="job-description-content">${description}</div></details></div>`;
         list.appendChild(article);
@@ -438,16 +520,7 @@
           <div><label>Job title</label><input data-index="${index}" data-field="title" value="${escapeHtml(job.title)}"></div>
           <div><label>Location</label><input data-index="${index}" data-field="location" value="${escapeHtml(job.location)}"></div>
           <div><label>Employment type</label><input data-index="${index}" data-field="type" value="${escapeHtml(job.type)}"></div>
-          <details class="editor-accordion">
-            <summary>Full Job Description</summary>
-            <div class="editor-accordion-body">
-              <label for="description-${index}">Job description content</label>
-              <textarea id="description-${index}" data-index="${index}" data-field="description" placeholder="Paste the full job description here. Use separate lines for headings, responsibilities and requirements.">${escapeHtml(job.description || '')}</textarea>
-              <p class="editor-accordion-hint">This content appears inside the branded “View job description” dropdown on the live vacancies page.</p>
-              <div class="preview-label">Live preview</div>
-              <div class="description-preview" data-description-preview="${index}">${escapeHtml(job.description || '')}</div>
-            </div>
-          </details>
+          <button class="description-editor-button" type="button" data-edit-description="${index}">Job Description</button>
           <div style="grid-column:1/-1"><label>Optional attachment or external link</label><input type="url" data-index="${index}" data-field="descriptionUrl" value="${escapeHtml(job.descriptionUrl)}" placeholder="https://..."></div>
           <div style="grid-column:1/-1"><label>Company logo</label><input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-logo-index="${index}"><p class="file-hint">Current: ${job.logo ? 'logo added' : 'no logo'}</p></div>
         </div><button class="remove-job" type="button" data-remove-index="${index}">Remove vacancy</button>`;
@@ -462,6 +535,37 @@
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
+    }
+
+    let activeDescriptionIndex = null;
+    let originalDescriptionHtml = '';
+
+    function openRichEditor(index) {
+      activeDescriptionIndex = Number(index);
+      const job = state.vacancies[activeDescriptionIndex];
+      if (!job) return;
+      originalDescriptionHtml = job.description || '';
+      document.getElementById('richEditorJobName').textContent = `${job.company || 'Company'} - ${job.title || 'Vacancy'}`;
+      document.getElementById('richEditorCanvas').innerHTML = sanitizeRichHtml(originalDescriptionHtml);
+      document.getElementById('richEditorOverlay').classList.add('open');
+      document.getElementById('richEditorOverlay').setAttribute('aria-hidden', 'false');
+      setTimeout(() => document.getElementById('richEditorCanvas').focus(), 0);
+    }
+
+    function closeRichEditor(save) {
+      if (save && activeDescriptionIndex !== null && state.vacancies[activeDescriptionIndex]) {
+        state.vacancies[activeDescriptionIndex].description = sanitizeRichHtml(document.getElementById('richEditorCanvas').innerHTML);
+        renderPage();
+        showStatus('Job description updated. Click Save changes to store it.');
+      }
+      document.getElementById('richEditorOverlay').classList.remove('open');
+      document.getElementById('richEditorOverlay').setAttribute('aria-hidden', 'true');
+      activeDescriptionIndex = null;
+    }
+
+    function runEditorCommand(command, value = null) {
+      document.getElementById('richEditorCanvas').focus();
+      document.execCommand(command, false, value);
     }
 
     function openAdmin() {
@@ -486,6 +590,18 @@
     document.getElementById('openAdmin').addEventListener('click', openAdmin);
     document.getElementById('closeAdmin').addEventListener('click', closeAdmin);
 
+    document.getElementById('vacancyEditor').addEventListener('click', event => {
+      const edit = event.target.closest('[data-edit-description]');
+      if (edit) openRichEditor(edit.dataset.editDescription);
+    });
+    document.getElementById('closeRichEditor').addEventListener('click', () => closeRichEditor(false));
+    document.getElementById('cancelRichEditor').addEventListener('click', () => closeRichEditor(false));
+    document.getElementById('saveRichEditor').addEventListener('click', () => closeRichEditor(true));
+    document.querySelectorAll('[data-command]').forEach(button => button.addEventListener('click', () => runEditorCommand(button.dataset.command)));
+    document.querySelectorAll('[data-block]').forEach(button => button.addEventListener('click', () => runEditorCommand('formatBlock', button.dataset.block)));
+    document.getElementById('textSize').addEventListener('change', event => runEditorCommand('fontSize', event.target.value));
+    document.getElementById('textColor').addEventListener('input', event => runEditorCommand('foreColor', event.target.value));
+
     document.getElementById('mainLogoFile').addEventListener('change', async event => {
       const file = event.target.files[0];
       if (!file) return;
@@ -509,10 +625,6 @@
       const index = Number(input.dataset.index);
       const job = state.vacancies[index];
       if (job) job[input.dataset.field] = input.value;
-      if (input.dataset.field === 'description') {
-        const preview = document.querySelector(`[data-description-preview="${index}"]`);
-        if (preview) preview.textContent = input.value;
-      }
       renderPage();
     });
 
@@ -566,7 +678,7 @@
         if (job.descriptionUrl) lines.push(`External link: ${job.descriptionUrl}`);
         lines.push('');
         lines.push('JOB DESCRIPTION');
-        lines.push(job.description || 'No job description has been added.');
+        lines.push(job.description ? richHtmlToText(job.description) : 'No job description has been added.');
         lines.push('');
         lines.push('----------------------------------------');
         lines.push('');
