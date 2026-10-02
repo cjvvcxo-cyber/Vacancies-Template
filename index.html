@@ -133,6 +133,11 @@
     .meta { display: flex; flex-wrap: wrap; gap: 8px; }
     .tag { padding: 6px 10px; border-radius: 999px; color: #42616A; background: #EAF3F5; font-size: .82rem; font-weight: 700; }
     .job-actions { display: flex; flex-direction: column; gap: 10px; min-width: 190px; }
+    .job-description { grid-column: 1 / -1; border-top: 1px solid var(--line); padding-top: 0; }
+    .job-description details { border-radius: 12px; background: #F8FAFB; }
+    .job-description summary { padding: 14px 16px; color: var(--teal); cursor: pointer; font-weight: 800; list-style-position: inside; }
+    .job-description-content { padding: 0 16px 18px; color: #52616A; white-space: pre-wrap; }
+    .job-description-content p:last-child { margin-bottom: 0; }
     .job-link, .apply-link {
       display: inline-flex;
       justify-content: center;
@@ -310,6 +315,7 @@
         <div class="admin-actions">
           <button class="button small" id="saveChanges" type="button">Save changes</button>
           <button class="button small" id="exportData" type="button">Export JSON</button>
+          <button class="button small" id="exportNotepad" type="button">Export Notepad file</button>
           <label class="button small" for="importData">Import JSON</label>
           <input id="importData" type="file" accept="application/json" hidden>
           <button class="button small danger" id="resetData" type="button">Reset</button>
@@ -330,13 +336,13 @@
       logoY: 0,
       formEndpoint: '',
       vacancies: [
-        { id: crypto.randomUUID(), company: 'Two Mountains Underwriters', title: 'Development', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
-        { id: crypto.randomUUID(), company: 'FlySafair', title: 'Manager: Digital Solutions (Engineering & Systems)', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
-        { id: crypto.randomUUID(), company: 'FlySafair', title: 'Product Owner (Mobile App)', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
-        { id: crypto.randomUUID(), company: 'AlexForbes', title: 'Technology Architect', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
-        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Head of IT Operations & Shared Services', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
-        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Senior Systems Analyst - ERP', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
-        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Analytics Engineer', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' }
+        { id: crypto.randomUUID(), company: 'Two Mountains Underwriters', title: 'Development', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'FlySafair', title: 'Manager: Digital Solutions (Engineering & Systems)', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'FlySafair', title: 'Product Owner (Mobile App)', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'AlexForbes', title: 'Technology Architect', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Head of IT Operations & Shared Services', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Senior Systems Analyst - ERP', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Analytics Engineer', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' }
       ]
     };
 
@@ -390,9 +396,11 @@
         const logo = job.logo
           ? `<img class="company-logo" src="${escapeHtml(job.logo)}" alt="${escapeHtml(job.company)} logo">`
           : `<div class="company-logo placeholder" aria-hidden="true">${escapeHtml(initials(job.company))}</div>`;
-        const jdClass = job.descriptionUrl ? 'job-link' : 'job-link disabled';
-        const href = job.descriptionUrl || '#';
-        article.innerHTML = `${logo}<div><div class="company">${escapeHtml(job.company)}</div><h3>${escapeHtml(job.title)}</h3><div class="meta"><span class="tag">${escapeHtml(job.location)}</span><span class="tag">${escapeHtml(job.type)}</span></div></div><div class="job-actions"><a class="${jdClass}" href="${escapeHtml(href)}" target="_blank" rel="noopener">Job description</a><a class="apply-link" href="#apply" data-role="${escapeHtml(job.id)}">Apply now</a></div>`;
+        const externalLink = job.descriptionUrl ? `<a class="job-link" href="${escapeHtml(job.descriptionUrl)}" target="_blank" rel="noopener">Open attachment</a>` : '';
+        const description = job.description && job.description.trim()
+          ? escapeHtml(job.description)
+          : 'The full job description will be added here.';
+        article.innerHTML = `${logo}<div><div class="company">${escapeHtml(job.company)}</div><h3>${escapeHtml(job.title)}</h3><div class="meta"><span class="tag">${escapeHtml(job.location)}</span><span class="tag">${escapeHtml(job.type)}</span></div></div><div class="job-actions">${externalLink}<a class="apply-link" href="#apply" data-role="${escapeHtml(job.id)}">Apply now</a></div><div class="job-description"><details><summary>View job description</summary><div class="job-description-content">${description}</div></details></div>`;
         list.appendChild(article);
       });
 
@@ -418,7 +426,8 @@
           <div><label>Job title</label><input data-index="${index}" data-field="title" value="${escapeHtml(job.title)}"></div>
           <div><label>Location</label><input data-index="${index}" data-field="location" value="${escapeHtml(job.location)}"></div>
           <div><label>Employment type</label><input data-index="${index}" data-field="type" value="${escapeHtml(job.type)}"></div>
-          <div style="grid-column:1/-1"><label>Job description link</label><input type="url" data-index="${index}" data-field="descriptionUrl" value="${escapeHtml(job.descriptionUrl)}" placeholder="https://..."></div>
+          <div style="grid-column:1/-1"><label>Full job description</label><textarea data-index="${index}" data-field="description" placeholder="Paste the full job description here...">${escapeHtml(job.description || '')}</textarea></div>
+          <div style="grid-column:1/-1"><label>Optional attachment or external link</label><input type="url" data-index="${index}" data-field="descriptionUrl" value="${escapeHtml(job.descriptionUrl)}" placeholder="https://..."></div>
           <div style="grid-column:1/-1"><label>Company logo</label><input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-logo-index="${index}"><p class="file-hint">Current: ${job.logo ? 'logo added' : 'no logo'}</p></div>
         </div><button class="remove-job" type="button" data-remove-index="${index}">Remove vacancy</button>`;
         editor.appendChild(card);
@@ -499,7 +508,7 @@
     });
 
     document.getElementById('addVacancy').addEventListener('click', () => {
-      state.vacancies.push({ id: crypto.randomUUID(), company: '', title: '', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' });
+      state.vacancies.push({ id: crypto.randomUUID(), company: '', title: '', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', description: '', logo: '' });
       renderPage();
       renderEditor();
     });
@@ -515,6 +524,31 @@
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = 'cxo-vacancies-data.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    document.getElementById('exportNotepad').addEventListener('click', () => {
+      const lines = [];
+      lines.push('CxO VACANCIES');
+      lines.push('==============');
+      lines.push('');
+      state.vacancies.forEach((job, index) => {
+        lines.push(`${index + 1}. ${job.company} - ${job.title}`);
+        lines.push(`Location: ${job.location || ''}`);
+        lines.push(`Type: ${job.type || ''}`);
+        if (job.descriptionUrl) lines.push(`External link: ${job.descriptionUrl}`);
+        lines.push('');
+        lines.push('JOB DESCRIPTION');
+        lines.push(job.description || 'No job description has been added.');
+        lines.push('');
+        lines.push('----------------------------------------');
+        lines.push('');
+      });
+      const blob = new Blob([lines.join('\r\n')], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'CxO_Vacancies_Notepad.txt';
       link.click();
       URL.revokeObjectURL(link.href);
     });
