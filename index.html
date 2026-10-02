@@ -338,6 +338,8 @@
           <button class="button small" id="saveChanges" type="button">Save changes</button>
           <button class="button small" id="exportData" type="button">Export JSON</button>
           <button class="button small" id="exportNotepad" type="button">Export Notepad file</button>
+          <button class="button small" id="exportMauticHtml" type="button">Export Mautic HTML</button>
+          <button class="button small" id="copyMauticHtml" type="button">Copy Mautic HTML</button>
           <label class="button small" for="importData">Import JSON</label>
           <input id="importData" type="file" accept="application/json" hidden>
           <button class="button small danger" id="resetData" type="button">Reset</button>
@@ -657,6 +659,71 @@
       renderPage();
     });
 
+    function buildMauticHtml() {
+      const vacancyCards = state.vacancies.map((job, index) => {
+        const companyLogo = job.logo
+          ? `<img class="cxo-company-logo" src="${job.logo}" alt="${escapeHtml(job.company)} logo">`
+          : `<div class="cxo-company-logo cxo-placeholder">${escapeHtml(initials(job.company))}</div>`;
+        const description = job.description && job.description.trim()
+          ? sanitizeRichHtml(job.description)
+          : '<p>The full job description will be added here.</p>';
+        const attachment = job.descriptionUrl
+          ? `<a class="cxo-outline-btn" href="${escapeHtml(job.descriptionUrl)}" target="_blank" rel="noopener">Open attachment</a>`
+          : '';
+        return `<article class="cxo-job-card">
+          <div class="cxo-job-main">
+            ${companyLogo}
+            <div class="cxo-job-copy">
+              <div class="cxo-company">${escapeHtml(job.company)}</div>
+              <h3>${escapeHtml(job.title)}</h3>
+              <div class="cxo-tags"><span>${escapeHtml(job.location)}</span><span>${escapeHtml(job.type)}</span></div>
+            </div>
+            <div class="cxo-actions">${attachment}<a class="cxo-apply-btn" href="#cxo-application" data-cxo-role="${escapeHtml(job.company + ' - ' + job.title)}">Apply now</a></div>
+          </div>
+          <details class="cxo-description">
+            <summary>View job description</summary>
+            <div class="cxo-description-body">${description}</div>
+          </details>
+        </article>`;
+      }).join('\n');
+
+      const options = state.vacancies.map(job => `<option value="${escapeHtml(job.company + ' - ' + job.title)}">${escapeHtml(job.company + ' - ' + job.title)}</option>`).join('');
+
+      return `<!-- CxO Vacancies: paste this entire block into a Mautic custom HTML/code block. -->
+<style>
+.cxo-vacancies-app{--cxo-slate:#323F54;--cxo-teal:#31859D;--cxo-mist:#F4F7F8;--cxo-line:#DCE4E7;--cxo-ink:#26313A;font-family:Arial,sans-serif;color:var(--cxo-ink);background:var(--cxo-mist);padding:70px 20px;line-height:1.6}.cxo-wrap{width:min(1120px,100%);margin:auto}.cxo-heading{margin-bottom:36px}.cxo-heading small{color:var(--cxo-teal);font-weight:800;letter-spacing:.08em}.cxo-heading h2{margin:4px 0 10px;color:var(--cxo-slate);font-size:clamp(32px,5vw,52px);line-height:1.05}.cxo-heading p{max-width:720px;color:#68747E}.cxo-jobs{display:grid;gap:16px}.cxo-job-card{overflow:hidden;border:1px solid var(--cxo-line);border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(40,57,70,.06)}.cxo-job-main{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;padding:26px 28px}.cxo-company-logo{width:76px;height:76px;padding:9px;border:1px solid var(--cxo-line);border-radius:14px;background:#fff;object-fit:contain}.cxo-placeholder{display:grid;place-items:center;color:var(--cxo-teal);background:#EAF3F5;font-weight:900;font-size:20px}.cxo-company{color:var(--cxo-teal);font-size:13px;font-weight:800;letter-spacing:.07em}.cxo-job-copy h3{margin:3px 0 10px;color:var(--cxo-slate);font-size:22px;line-height:1.25}.cxo-tags{display:flex;flex-wrap:wrap;gap:8px}.cxo-tags span{padding:5px 10px;border-radius:999px;color:#42616A;background:#EAF3F5;font-size:13px;font-weight:700}.cxo-actions{display:flex;flex-direction:column;gap:9px;min-width:175px}.cxo-actions a{display:flex;min-height:42px;padding:0 15px;align-items:center;justify-content:center;border-radius:999px;text-decoration:none;font-weight:800}.cxo-apply-btn{color:#fff!important;background:var(--cxo-teal)}.cxo-outline-btn{border:1px solid #B7CCD2;color:var(--cxo-teal)!important;background:#fff}.cxo-description{border-top:1px solid var(--cxo-line)}.cxo-description summary{position:relative;padding:15px 52px 15px 28px;color:var(--cxo-slate);background:#F8FAFB;cursor:pointer;font-weight:800;list-style:none}.cxo-description summary::-webkit-details-marker{display:none}.cxo-description summary:after{content:'+';position:absolute;right:20px;top:50%;display:grid;width:28px;height:28px;place-items:center;border-radius:50%;color:#fff;background:var(--cxo-teal);transform:translateY(-50%)}.cxo-description[open] summary:after{content:'−'}.cxo-description-body{padding:24px 28px;color:#465760}.cxo-description-body h2,.cxo-description-body h3,.cxo-description-body h4{color:var(--cxo-slate)}.cxo-form-section{margin-top:54px;padding:32px;border-radius:18px;color:#fff;background:#4B4F54}.cxo-form-section h2{margin-top:0}.cxo-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cxo-field-full{grid-column:1/-1}.cxo-form label{display:block;margin-bottom:6px;font-weight:800}.cxo-form input,.cxo-form select{width:100%;min-height:48px;padding:10px 12px;border:1px solid #CAD5D9;border-radius:9px;background:#fff;color:#26313A;box-sizing:border-box}.cxo-submit{grid-column:1/-1;width:max-content;min-height:48px;padding:0 22px;border:0;border-radius:999px;color:#fff;background:var(--cxo-teal);font-weight:800;cursor:pointer}@media(max-width:720px){.cxo-job-main{grid-template-columns:1fr;padding:22px}.cxo-actions{min-width:0}.cxo-form{grid-template-columns:1fr}.cxo-field-full,.cxo-submit{grid-column:auto}.cxo-company-logo{width:68px;height:68px}}
+</style>
+<section class="cxo-vacancies-app">
+  <div class="cxo-wrap">
+    <div class="cxo-heading"><small>Opportunities</small><h2>Current vacancies</h2><p>Select a vacancy to view the full job description or submit an application.</p></div>
+    <div class="cxo-jobs">${vacancyCards || '<p>No vacancies are currently listed.</p>'}</div>
+    <div class="cxo-form-section" id="cxo-application">
+      <h2>Apply for an opportunity</h2>
+      <form class="cxo-form" method="post" action="${escapeHtml(state.formEndpoint || '#')}">
+        <div><label>Name *</label><input name="first_name" required></div>
+        <div><label>Surname *</label><input name="surname" required></div>
+        <div><label>Email address *</label><input type="email" name="email" required></div>
+        <div><label>Contact number *</label><input type="tel" name="contact_number" required></div>
+        <div class="cxo-field-full"><label>Vacancy *</label><select id="cxo-role" name="vacancy" required><option value="">Select a vacancy</option>${options}</select></div>
+        <button class="cxo-submit" type="submit">Submit application</button>
+      </form>
+    </div>
+  </div>
+</section>
+<script>
+document.addEventListener('click',function(event){var link=event.target.closest('[data-cxo-role]');if(link){var field=document.getElementById('cxo-role');if(field){field.value=link.getAttribute('data-cxo-role');}}});
+</script>`;
+    }
+
+    function downloadTextFile(fileName, contents) {
+      const blob = new Blob([contents], { type: 'text/plain;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
     document.getElementById('exportData').addEventListener('click', () => {
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
       const link = document.createElement('a');
@@ -686,9 +753,24 @@
       const blob = new Blob([lines.join('\r\n')], { type: 'text/plain;charset=utf-8' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = 'CxO_Vacancies_Notepad.txt';
+      link.download = 'CxO_Vacancies_Plain_Text.txt';
       link.click();
       URL.revokeObjectURL(link.href);
+    });
+
+    document.getElementById('exportMauticHtml').addEventListener('click', () => {
+      downloadTextFile('CxO_Vacancies_Mautic_HTML.txt', buildMauticHtml());
+      showStatus('Mautic HTML exported. Paste the full contents into a Mautic custom HTML/code block.');
+    });
+
+    document.getElementById('copyMauticHtml').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(buildMauticHtml());
+        showStatus('Mautic HTML copied. Paste it into a Mautic custom HTML/code block.');
+      } catch {
+        downloadTextFile('CxO_Vacancies_Mautic_HTML.txt', buildMauticHtml());
+        showStatus('Clipboard access was blocked, so the Mautic HTML file was downloaded instead.');
+      }
     });
 
     document.getElementById('importData').addEventListener('change', async event => {
