@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CxO vacancies and career opportunities">
+  <title>Vacancies | CxO</title>
+  <style>
+    :root {
+      --charcoal: #4B4F54;
+      --slate: #323F54;
+      --navy: #1D3443;
+      --teal: #31859D;
+      --white: #FFFFFF;
+      --mist: #F4F7F8;
+      --line: #DCE4E7;
+      --ink: #26313A;
+      --danger: #B42318;
+      --shadow: 0 18px 50px rgba(33, 48, 61, .12);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--white);
+      font-family: "Proxima Nova", "Futura Now", Gotham, Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    body.admin-open { overflow: hidden; }
+    a { color: inherit; }
+    button, input, select, textarea { font: inherit; }
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar { position: absolute; z-index: 5; inset: 0 0 auto; padding: 26px 0; }
+    .topbar-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+    .brand { display: inline-flex; align-items: center; }
+    .brand img {
+      display: block;
+      width: 220px;
+      height: auto;
+      object-fit: contain;
+      transform-origin: left top;
+    }
+    .admin-trigger {
+      border: 1px solid rgba(255,255,255,.4);
+      border-radius: 999px;
+      padding: 9px 15px;
+      color: white;
+      background: rgba(255,255,255,.07);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 620px;
+      display: grid;
+      align-items: center;
+      overflow: hidden;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 82% 20%, rgba(49, 133, 157, .55), transparent 34%),
+        linear-gradient(122deg, #212D3E 0%, var(--slate) 55%, #285F70 100%);
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 750px; padding: 150px 0 110px; }
+    .hero-network { position: absolute; z-index: 1; right: 2%; top: 12%; width: min(47vw, 680px); opacity: .58; pointer-events: none; }
+    .hero-network svg { display: block; width: 100%; height: auto; }
+    .network-line { stroke: #8ED3E1; stroke-width: 2; opacity: .48; }
+    .network-node { fill: rgba(255,255,255,.08); stroke: #9EDAE5; stroke-width: 2; }
+    .network-person { fill: none; stroke: #FFFFFF; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .network-core { fill: rgba(49,133,157,.36); stroke: #D4F2F7; stroke-width: 2.5; }
+    .eyebrow { display: inline-block; margin-bottom: 22px; color: #CDECF3; font-size: .82rem; font-weight: 800; letter-spacing: .12em; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 22px; font-size: clamp(3rem, 7vw, 5.7rem); line-height: .98; letter-spacing: -.045em; }
+    .hero p { max-width: 680px; margin-bottom: 34px; color: rgba(255,255,255,.84); font-size: clamp(1.08rem, 2vw, 1.3rem); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      padding: 0 24px;
+      border: 2px solid transparent;
+      border-radius: 999px;
+      background: var(--teal);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform .2s, background .2s, box-shadow .2s;
+    }
+    .button:hover { transform: translateY(-2px); background: #28778E; box-shadow: 0 12px 25px rgba(0,0,0,.18); }
+    .button.secondary { margin-left: 10px; border-color: rgba(255,255,255,.55); background: transparent; }
+    .button.small { min-height: 42px; padding: 0 17px; font-size: .9rem; }
+    .button.danger { background: var(--danger); }
+
+    section { padding: 90px 0; }
+    .section-head { display: grid; grid-template-columns: .8fr 1.2fr; gap: 60px; align-items: end; margin-bottom: 48px; }
+    .section-head h2 { margin: 0; color: var(--slate); font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.05; letter-spacing: -.035em; }
+    .section-head p { margin: 0; color: #68747E; font-size: 1.08rem; }
+
+    .openings { background: var(--mist); }
+    .jobs { display: grid; gap: 16px; }
+    .job-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 28px 30px;
+      border: 1px solid transparent;
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: 0 8px 24px rgba(40,57,70,.05);
+    }
+    .job-card:hover { border-color: #BCD4DA; box-shadow: var(--shadow); }
+    .company-logo {
+      width: 78px;
+      height: 78px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+      object-fit: contain;
+    }
+    .company-logo.placeholder { display: grid; place-items: center; background: #EAF3F5; color: var(--teal); font-weight: 900; font-size: 1.35rem; }
+    .company { margin-bottom: 4px; color: var(--teal); font-size: .82rem; font-weight: 800; letter-spacing: .08em; }
+    .job-card h3 { margin-bottom: 10px; color: var(--slate); font-size: 1.35rem; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag { padding: 6px 10px; border-radius: 999px; color: #42616A; background: #EAF3F5; font-size: .82rem; font-weight: 700; }
+    .job-actions { display: flex; flex-direction: column; gap: 10px; min-width: 190px; }
+    .job-link, .apply-link {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .job-link { border: 1px solid #B7CCD2; color: var(--teal); }
+    .job-link.disabled { opacity: .45; pointer-events: none; }
+    .apply-link { background: var(--teal); color: white; }
+    .empty-state { padding: 50px 30px; border: 1px dashed #B7C8CD; border-radius: var(--radius); text-align: center; background: rgba(255,255,255,.75); }
+
+    .apply { color: white; background: var(--charcoal); }
+    .apply-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 70px; align-items: start; }
+    .apply h2 { margin-bottom: 18px; font-size: clamp(2.2rem, 4.5vw, 3.8rem); line-height: 1.05; letter-spacing: -.035em; }
+    .apply p { color: rgba(255,255,255,.78); }
+    .form-shell { padding: 34px; border-radius: var(--radius); background: white; color: var(--ink); box-shadow: var(--shadow); }
+    .form-shell h3 { color: var(--slate); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .field.full { grid-column: 1 / -1; }
+    label { display: block; margin-bottom: 6px; color: #334451; font-size: .9rem; font-weight: 800; }
+    input, select, textarea { width: 100%; min-height: 48px; padding: 11px 13px; border: 1px solid #C9D5D9; border-radius: 10px; background: white; color: var(--ink); }
+    textarea { min-height: 95px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { outline: 3px solid rgba(49,133,157,.18); border-color: var(--teal); }
+    .required { color: var(--danger); }
+    .consent { display: flex; gap: 10px; align-items: flex-start; margin: 20px 0; }
+    .consent input { width: 18px; min-height: 18px; margin-top: 4px; }
+    .consent label { margin: 0; font-weight: 500; }
+    .form-note { margin: 15px 0 0; color: #69767F; font-size: .86rem; }
+
+    footer { padding: 28px 0; color: rgba(255,255,255,.7); background: #252A2E; font-size: .9rem; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    footer img { width: 165px; height: auto; }
+
+    .admin-overlay { position: fixed; z-index: 50; inset: 0; display: none; background: rgba(11,22,29,.72); }
+    .admin-overlay.open { display: block; }
+    .admin-panel { position: absolute; inset: 0 0 0 auto; width: min(680px, 100%); overflow-y: auto; padding: 28px; background: #F5F8F9; box-shadow: -20px 0 50px rgba(0,0,0,.25); }
+    .admin-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 24px; }
+    .admin-head h2 { margin: 0; color: var(--slate); }
+    .close-admin { width: 44px; height: 44px; border: 0; border-radius: 50%; background: white; cursor: pointer; font-size: 1.4rem; }
+    .admin-section { margin-bottom: 22px; padding: 22px; border: 1px solid var(--line); border-radius: 15px; background: white; }
+    .admin-section h3 { color: var(--slate); }
+    .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .admin-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .vacancy-editor { display: grid; gap: 12px; }
+    .vacancy-edit-card { position: relative; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #FBFCFC; }
+    .vacancy-edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .remove-job { margin-top: 10px; border: 0; color: var(--danger); background: transparent; cursor: pointer; font-weight: 800; }
+    .file-hint { margin: 6px 0 0; color: #6B7880; font-size: .8rem; }
+    .status { display: none; margin-top: 12px; padding: 10px 12px; border-left: 4px solid var(--teal); background: #ECF5F7; }
+
+    @media (max-width: 800px) {
+      .section-head, .apply-grid { grid-template-columns: 1fr; gap: 24px; }
+      .job-card { grid-template-columns: auto 1fr; }
+      .job-actions { grid-column: 1 / -1; flex-direction: row; min-width: 0; }
+      .hero-network { right: -20%; top: 18%; width: 78vw; opacity: .26; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 560px) {
+      .container { width: min(100% - 28px, 1120px); }
+      .brand img { width: 185px; }
+      .admin-trigger { font-size: 0; width: 42px; height: 42px; padding: 0; }
+      .admin-trigger::after { content: "Edit"; font-size: .72rem; }
+      section { padding: 70px 0; }
+      .hero-content { padding-top: 125px; }
+      .job-card { grid-template-columns: 1fr; padding: 24px; }
+      .job-actions { grid-column: auto; flex-direction: column; }
+      .company-logo { width: 68px; height: 68px; }
+      .form-grid, .admin-grid, .vacancy-edit-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .form-shell { padding: 24px; }
+      .button.secondary { margin: 10px 0 0; }
+      .admin-panel { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="#top" aria-label="CxO vacancies home">
+        <img id="mainLogo" alt="CxO series logo">
+      </a>
+      <button class="admin-trigger" id="openAdmin" type="button">Edit vacancies</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="hero-network" aria-hidden="true">
+        <svg viewBox="0 0 720 620" xmlns="http://www.w3.org/2000/svg">
+          <path class="network-line" d="M358 308L164 150M358 308L548 125M358 308L615 340M358 308L500 515M358 308L205 505M164 150L548 125M548 125L615 340M615 340L500 515M500 515L205 505M205 505L164 150"/>
+          <g><circle class="network-core" cx="358" cy="308" r="54"/><circle class="network-node" cx="164" cy="150" r="48"/><circle class="network-node" cx="548" cy="125" r="48"/><circle class="network-node" cx="615" cy="340" r="48"/><circle class="network-node" cx="500" cy="515" r="48"/><circle class="network-node" cx="205" cy="505" r="48"/></g>
+          <g class="network-person"><g transform="translate(358 308)"><circle cy="-18" r="14"/><path d="M-28 32c3-22 14-34 28-34s25 12 28 34"/></g><g transform="translate(164 150)"><circle cy="-13" r="10"/><path d="M-20 25c2-17 10-26 20-26s18 9 20 26"/></g><g transform="translate(548 125)"><circle cy="-13" r="10"/><path d="M-20 25c2-17 10-26 20-26s18 9 20 26"/></g><g transform="translate(615 340)"><circle cy="-13" r="10"/><path d="M-20 25c2-17 10-26 20-26s18 9 20 26"/></g></g>
+        </svg>
+      </div>
+      <div class="container hero-content">
+        <span class="eyebrow">Careers at CxO</span>
+        <h1 id="pageTitle">Build what's next.</h1>
+        <p>Explore current technology and leadership opportunities from organisations in the CxO community.</p>
+        <a class="button" href="#openings">View vacancies</a>
+        <a class="button secondary" href="#apply">Apply now</a>
+      </div>
+    </section>
+
+    <section class="openings" id="openings">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow" style="color:var(--teal)">Opportunities</span><h2>Current vacancies</h2></div>
+          <p>Select a vacancy to view the job description or submit an application.</p>
+        </div>
+        <div class="jobs" id="jobsList"></div>
+      </div>
+    </section>
+
+    <section class="apply" id="apply">
+      <div class="container apply-grid">
+        <div><span class="eyebrow">Your next step</span><h2>Apply for an opportunity</h2><p>Complete the form with your contact details and select the position that interests you.</p></div>
+        <div class="form-shell">
+          <h3>Candidate details</h3>
+          <form id="candidateForm">
+            <div class="form-grid">
+              <div class="field"><label for="firstName">Name <span class="required">*</span></label><input id="firstName" name="first_name" autocomplete="given-name" required></div>
+              <div class="field"><label for="surname">Surname <span class="required">*</span></label><input id="surname" name="surname" autocomplete="family-name" required></div>
+              <div class="field"><label for="email">Email address <span class="required">*</span></label><input id="email" name="email" type="email" autocomplete="email" required></div>
+              <div class="field"><label for="phone">Contact number <span class="required">*</span></label><input id="phone" name="contact_number" type="tel" autocomplete="tel" required></div>
+              <div class="field full"><label for="role">Vacancy <span class="required">*</span></label><select id="role" name="vacancy" required></select></div>
+            </div>
+            <div class="consent"><input id="consent" type="checkbox" required><label for="consent">I consent to CxO processing my details for this application. <span class="required">*</span></label></div>
+            <button class="button" type="submit">Submit application</button>
+            <p class="form-note">The administrator can set the form submission URL in the editor. Without a URL, the form opens an email draft.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="container footer-inner"><img id="footerLogo" alt="CxO series logo"><span>© <span id="year"></span> CxO. All rights reserved.</span></div></footer>
+
+  <div class="admin-overlay" id="adminOverlay" aria-hidden="true">
+    <aside class="admin-panel" aria-label="Vacancy editor">
+      <div class="admin-head"><h2>Page editor</h2><button class="close-admin" id="closeAdmin" type="button" aria-label="Close editor">×</button></div>
+
+      <section class="admin-section">
+        <h3>Main CxO logo</h3>
+        <label for="mainLogoFile">Upload logo image</label>
+        <input id="mainLogoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <p class="file-hint">Use a high-resolution transparent PNG or SVG. The logo is saved in this browser.</p>
+        <div class="admin-grid">
+          <div><label for="logoWidth">Width</label><input id="logoWidth" type="range" min="80" max="420" step="1"></div>
+          <div><label for="logoScale">Scale</label><input id="logoScale" type="range" min="50" max="180" step="1"></div>
+          <div><label for="logoX">Horizontal position</label><input id="logoX" type="range" min="-150" max="350" step="1"></div>
+          <div><label for="logoY">Vertical position</label><input id="logoY" type="range" min="-80" max="180" step="1"></div>
+        </div>
+      </section>
+
+      <section class="admin-section">
+        <h3>Application settings</h3>
+        <label for="formEndpoint">Form submission URL</label>
+        <input id="formEndpoint" type="url" placeholder="https://your-form-endpoint.example/submit">
+        <p class="file-hint">This can be a Mautic form endpoint, Formspree endpoint, or another service that accepts form posts.</p>
+      </section>
+
+      <section class="admin-section">
+        <h3>Vacancies</h3>
+        <div class="vacancy-editor" id="vacancyEditor"></div>
+        <button class="button small" id="addVacancy" type="button">Add vacancy</button>
+      </section>
+
+      <section class="admin-section">
+        <h3>Save or move your data</h3>
+        <div class="admin-actions">
+          <button class="button small" id="saveChanges" type="button">Save changes</button>
+          <button class="button small" id="exportData" type="button">Export JSON</button>
+          <label class="button small" for="importData">Import JSON</label>
+          <input id="importData" type="file" accept="application/json" hidden>
+          <button class="button small danger" id="resetData" type="button">Reset</button>
+        </div>
+        <div class="status" id="adminStatus"></div>
+      </section>
+    </aside>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'cxo-vacancies-webapp-v1';
+
+    const defaultState = {
+      mainLogo: '',
+      logoWidth: 220,
+      logoScale: 100,
+      logoX: 0,
+      logoY: 0,
+      formEndpoint: '',
+      vacancies: [
+        { id: crypto.randomUUID(), company: 'Two Mountains Underwriters', title: 'Development', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'FlySafair', title: 'Manager: Digital Solutions (Engineering & Systems)', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'FlySafair', title: 'Product Owner (Mobile App)', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'AlexForbes', title: 'Technology Architect', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Head of IT Operations & Shared Services', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Senior Systems Analyst - ERP', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' },
+        { id: crypto.randomUUID(), company: 'Tsebo', title: 'Analytics Engineer', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' }
+      ]
+    };
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return saved && Array.isArray(saved.vacancies) ? { ...structuredClone(defaultState), ...saved } : structuredClone(defaultState);
+      } catch { return structuredClone(defaultState); }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      showStatus('Changes saved in this browser.');
+    }
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
+    }
+
+    function initials(company) {
+      return company.split(/\s+/).filter(Boolean).slice(0,2).map(word => word[0]).join('').toUpperCase() || 'JOB';
+    }
+
+    function renderPage() {
+      const mainLogo = document.getElementById('mainLogo');
+      const footerLogo = document.getElementById('footerLogo');
+      if (state.mainLogo) {
+        mainLogo.src = state.mainLogo;
+        footerLogo.src = state.mainLogo;
+        mainLogo.style.display = '';
+        footerLogo.style.display = '';
+      } else {
+        mainLogo.removeAttribute('src');
+        footerLogo.removeAttribute('src');
+        mainLogo.style.display = 'none';
+        footerLogo.style.display = 'none';
+      }
+      mainLogo.style.width = state.logoWidth + 'px';
+      mainLogo.style.transform = `translate(${state.logoX}px, ${state.logoY}px) scale(${state.logoScale / 100})`;
+
+      const list = document.getElementById('jobsList');
+      list.innerHTML = '';
+      if (!state.vacancies.length) {
+        list.innerHTML = '<div class="empty-state"><h3>No vacancies are currently listed</h3><p>Please check again soon for new opportunities.</p></div>';
+      }
+      state.vacancies.forEach(job => {
+        const article = document.createElement('article');
+        article.className = 'job-card';
+        const logo = job.logo
+          ? `<img class="company-logo" src="${escapeHtml(job.logo)}" alt="${escapeHtml(job.company)} logo">`
+          : `<div class="company-logo placeholder" aria-hidden="true">${escapeHtml(initials(job.company))}</div>`;
+        const jdClass = job.descriptionUrl ? 'job-link' : 'job-link disabled';
+        const href = job.descriptionUrl || '#';
+        article.innerHTML = `${logo}<div><div class="company">${escapeHtml(job.company)}</div><h3>${escapeHtml(job.title)}</h3><div class="meta"><span class="tag">${escapeHtml(job.location)}</span><span class="tag">${escapeHtml(job.type)}</span></div></div><div class="job-actions"><a class="${jdClass}" href="${escapeHtml(href)}" target="_blank" rel="noopener">Job description</a><a class="apply-link" href="#apply" data-role="${escapeHtml(job.id)}">Apply now</a></div>`;
+        list.appendChild(article);
+      });
+
+      const role = document.getElementById('role');
+      const selected = role.value;
+      role.innerHTML = '<option value="">Select a vacancy</option>' + state.vacancies.map(job => `<option value="${escapeHtml(job.id)}">${escapeHtml(job.company)} - ${escapeHtml(job.title)}</option>`).join('');
+      if ([...role.options].some(option => option.value === selected)) role.value = selected;
+    }
+
+    function renderEditor() {
+      document.getElementById('logoWidth').value = state.logoWidth;
+      document.getElementById('logoScale').value = state.logoScale;
+      document.getElementById('logoX').value = state.logoX;
+      document.getElementById('logoY').value = state.logoY;
+      document.getElementById('formEndpoint').value = state.formEndpoint || '';
+      const editor = document.getElementById('vacancyEditor');
+      editor.innerHTML = '';
+      state.vacancies.forEach((job, index) => {
+        const card = document.createElement('div');
+        card.className = 'vacancy-edit-card';
+        card.innerHTML = `<div class="vacancy-edit-grid">
+          <div><label>Company</label><input data-index="${index}" data-field="company" value="${escapeHtml(job.company)}"></div>
+          <div><label>Job title</label><input data-index="${index}" data-field="title" value="${escapeHtml(job.title)}"></div>
+          <div><label>Location</label><input data-index="${index}" data-field="location" value="${escapeHtml(job.location)}"></div>
+          <div><label>Employment type</label><input data-index="${index}" data-field="type" value="${escapeHtml(job.type)}"></div>
+          <div style="grid-column:1/-1"><label>Job description link</label><input type="url" data-index="${index}" data-field="descriptionUrl" value="${escapeHtml(job.descriptionUrl)}" placeholder="https://..."></div>
+          <div style="grid-column:1/-1"><label>Company logo</label><input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" data-logo-index="${index}"><p class="file-hint">Current: ${job.logo ? 'logo added' : 'no logo'}</p></div>
+        </div><button class="remove-job" type="button" data-remove-index="${index}">Remove vacancy</button>`;
+        editor.appendChild(card);
+      });
+    }
+
+    function fileToDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function openAdmin() {
+      renderEditor();
+      document.getElementById('adminOverlay').classList.add('open');
+      document.getElementById('adminOverlay').setAttribute('aria-hidden', 'false');
+      document.body.classList.add('admin-open');
+    }
+
+    function closeAdmin() {
+      document.getElementById('adminOverlay').classList.remove('open');
+      document.getElementById('adminOverlay').setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('admin-open');
+    }
+
+    function showStatus(message) {
+      const status = document.getElementById('adminStatus');
+      status.textContent = message;
+      status.style.display = 'block';
+    }
+
+    document.getElementById('openAdmin').addEventListener('click', openAdmin);
+    document.getElementById('closeAdmin').addEventListener('click', closeAdmin);
+
+    document.getElementById('mainLogoFile').addEventListener('change', async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      state.mainLogo = await fileToDataUrl(file);
+      renderPage();
+      showStatus('Main logo added. Click Save changes.');
+    });
+
+    ['logoWidth','logoScale','logoX','logoY'].forEach(id => {
+      document.getElementById(id).addEventListener('input', event => {
+        state[id] = Number(event.target.value);
+        renderPage();
+      });
+    });
+
+    document.getElementById('formEndpoint').addEventListener('input', event => state.formEndpoint = event.target.value.trim());
+
+    document.getElementById('vacancyEditor').addEventListener('input', event => {
+      const input = event.target.closest('[data-index][data-field]');
+      if (!input) return;
+      const job = state.vacancies[Number(input.dataset.index)];
+      if (job) job[input.dataset.field] = input.value;
+      renderPage();
+    });
+
+    document.getElementById('vacancyEditor').addEventListener('change', async event => {
+      const input = event.target.closest('[data-logo-index]');
+      if (!input || !input.files[0]) return;
+      state.vacancies[Number(input.dataset.logoIndex)].logo = await fileToDataUrl(input.files[0]);
+      renderPage();
+      renderEditor();
+      showStatus('Company logo added. Click Save changes.');
+    });
+
+    document.getElementById('vacancyEditor').addEventListener('click', event => {
+      const button = event.target.closest('[data-remove-index]');
+      if (!button) return;
+      state.vacancies.splice(Number(button.dataset.removeIndex), 1);
+      renderPage();
+      renderEditor();
+    });
+
+    document.getElementById('addVacancy').addEventListener('click', () => {
+      state.vacancies.push({ id: crypto.randomUUID(), company: '', title: '', location: 'South Africa', type: 'Vacancy', descriptionUrl: '', logo: '' });
+      renderPage();
+      renderEditor();
+    });
+
+    document.getElementById('saveChanges').addEventListener('click', () => {
+      state.formEndpoint = document.getElementById('formEndpoint').value.trim();
+      saveState();
+      renderPage();
+    });
+
+    document.getElementById('exportData').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'cxo-vacancies-data.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    document.getElementById('importData').addEventListener('change', async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      try {
+        const imported = JSON.parse(await file.text());
+        if (!Array.isArray(imported.vacancies)) throw new Error('Invalid data');
+        state = { ...structuredClone(defaultState), ...imported };
+        saveState();
+        renderPage();
+        renderEditor();
+        showStatus('Data imported successfully.');
+      } catch { showStatus('The selected JSON file is not valid.'); }
+    });
+
+    document.getElementById('resetData').addEventListener('click', () => {
+      if (!confirm('Reset the logo, positioning and all vacancies?')) return;
+      state = structuredClone(defaultState);
+      localStorage.removeItem(STORAGE_KEY);
+      renderPage();
+      renderEditor();
+      showStatus('Page reset to the original vacancy list.');
+    });
+
+    document.addEventListener('click', event => {
+      const apply = event.target.closest('[data-role]');
+      if (apply) document.getElementById('role').value = apply.dataset.role;
+    });
+
+    document.getElementById('candidateForm').addEventListener('submit', event => {
+      const form = event.currentTarget;
+      if (!form.reportValidity()) { event.preventDefault(); return; }
+      const data = new FormData(form);
+      if (state.formEndpoint) {
+        form.method = 'post';
+        form.action = state.formEndpoint;
+        return;
+      }
+      event.preventDefault();
+      const roleId = data.get('vacancy');
+      const job = state.vacancies.find(item => item.id === roleId);
+      const subject = encodeURIComponent(`Vacancy application: ${job ? job.title : 'CxO vacancy'}`);
+      const body = encodeURIComponent(`Name: ${data.get('first_name')}\nSurname: ${data.get('surname')}\nEmail: ${data.get('email')}\nContact number: ${data.get('contact_number')}\nVacancy: ${job ? job.company + ' - ' + job.title : ''}`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderPage();
+  </script>
+</body>
+</html>
